@@ -1,26 +1,44 @@
-﻿namespace RepoPractice
+﻿using RepoPractice;
+
+namespace RepoPractice
 {
     using System;
     using System.Linq;
 
-    public class WordCounter
+    public class TextHelper
     {
-        private static readonly char[] separator = [' ', '.', ',', '!', '?'];
-
-        public static int CountLongWords(string input)
+        private string Text;
+        public TextHelper(string text)
         {
-            string[] words = input.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            int count = words.Count(word => word.Length > 4);
-            return words.Length;
+            Text = text;
         }
-        static WordCounter()
+        public int CountWordsMoreThanFourLetters()
         {
+            return Text.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Count(word => word.Length > 4);
         }
-        public static void Main()
-        { 
-            string text = "This is a simple example to count long words.";
-            int result = CountLongWords(text);
-            Console.WriteLine($"example: {result}");
+        public bool IsPalindrome()
+        {
+            var sanitizedText = new string(Text.Where(char.IsLetterOrDigit).ToArray())
+                .ToLowerInvariant();
+            return sanitizedText.SequenceEqual(sanitizedText.Reverse());
         }
+        public int CountVowels()
+        {
+            return Text.Count(c => "aeiouAEIOU".Contains(c));
+        }
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        var helper = new TextHelper("My text");
+        var result1 = helper.CountWordsMoreThanFourLetters();
+        Console.WriteLine($"Words with more than four letters; {result1}");
+        var result2 = helper.IsPalindrome();
+        Console.WriteLine($"Is the text a palindrome? {result2}");
+        var result3 = helper.CountVowels();
+        Console.WriteLine($"Number of vowels: {result3}");
     }
 }
